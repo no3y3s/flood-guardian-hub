@@ -8,9 +8,12 @@ import {
   Phone, 
   Radio,
   Settings,
-  Menu
+  Menu,
+  User,
+  LogOut
 } from 'lucide-react';
 import { useLocation, Link } from 'react-router-dom';
+import { useAuth } from '@/hooks/useAuth';
 
 interface NavigationProps {
   isMobile?: boolean;
@@ -19,6 +22,7 @@ interface NavigationProps {
 
 const Navigation: React.FC<NavigationProps> = ({ isMobile, onMenuToggle }) => {
   const location = useLocation();
+  const { user, signOut } = useAuth();
   
   const navItems = [
     { path: '/', icon: Home, label: 'Dashboard' },
@@ -83,9 +87,21 @@ const Navigation: React.FC<NavigationProps> = ({ isMobile, onMenuToggle }) => {
                 </Link>
               </Button>
             ))}
-            <Button variant="ghost" size="sm">
-              <Settings className="w-4 h-4" />
-            </Button>
+            {user ? (
+              <>
+                <Button variant="ghost" size="sm" onClick={signOut}>
+                  <LogOut className="w-4 h-4" />
+                  Sign Out
+                </Button>
+              </>
+            ) : (
+              <Button variant="emergency" size="sm" asChild>
+                <Link to="/auth" className="flex items-center gap-2">
+                  <User className="w-4 h-4" />
+                  Sign In
+                </Link>
+              </Button>
+            )}
           </nav>
 
           <Button
